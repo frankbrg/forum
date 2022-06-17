@@ -1,21 +1,69 @@
 version: '3'
-
 services:
-###> doctrine/doctrine-bundle ###
-  database:
-    image: postgres:${POSTGRES_VERSION:-13}-alpine
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ChangeMe}
-      POSTGRES_USER: ${POSTGRES_USER:-symfony}
+  web:
+    depends_on:
+      - db
+    build:
+      dockerfile: Docker/php/DockerFile
+      context: .
+    ports:
+      - "8000:8000"
+    entrypoint:
+     - symfony
+     - server:start
+    working_dir: /app
     volumes:
-      - db-data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
-
+      - ./:/app
+      - ~/.gitconfig:/root/.gitconfig:ro
+  db:
+    image: mariadb:latest
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=symfony
+      - MYSQL_PASSWORD=symfony
+      - MYSQL_DATABASE=db
+  phpmyadmin:
+    depends_on:
+      - db
+    image: phpmyadmin
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+  php:
+    build:
+      dockerfile: Docker/php/DockerFile
+      context: .
+    entrypoint: php
+    working_dir: /app
+    volumes:
+    - ./:/app
+    - ~/.gitconfig:/root/.gitconfig:ro
+  symfony:
+    build:
+      dockerfile: Docker/php/DockerFile
+      context: .
+    entrypoint: symfony
+    working_dir: /app
+    volumes:
+    - ./:/app
+    - ~/.gitconfig:/root/.gitconfig:ro
+  composer:
+    build:
+      dockerfile: Docker/php/DockerFile
+      context: .
+    entrypoint: composer
+    working_dir: /app
+    volumes:
+    - ./:/app
+    - ~/.gitconfig:/root/.gitconfig:ro
 volumes:
-###> doctrine/doctrine-bundle ###
   db-data:
-###< doctrine/doctrine-bundle ###
