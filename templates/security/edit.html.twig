@@ -20,6 +20,8 @@
         }) }}
         {{ form_row(userForm.agreeTerms) }}
 
-        <button type="submit" class="btn">Register</button>
+        <button type="submit" class="btn">Modify</button>
     {{ form_end(userForm) }}
+
+     <a href="{{path('app_delete_account')}}" class="btn">Delete account</a>
 {% endblock %}
