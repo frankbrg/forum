@@ -37,13 +37,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255)]
     private $address;
 
-    #[ORM\Column(type: 'string', length: 5)]
+    #[ORM\Column(type: 'string', length: 20)]
     private $postalCode;
 
     #[ORM\Column(type: 'string', length: 100)]
     private $city;
 
-    #[ORM\Column(type: 'string', length: 11)]
+    #[ORM\Column(type: 'string', length: 20)]
     private $phoneNumber;
 
     #[ORM\Column(type: 'string', length: 100, unique: true)]
