@@ -17,7 +17,7 @@ class UserFixtures extends Fixture
     public function __construct(private UserPasswordHasherInterface $passwordEncoder,
     private SluggerInterface $slugger)
     {
-        $this->faker = Factory::create('fr_FR');
+        $this->faker = Factory::create();
     }
 
     public function load(ObjectManager $manager): void
