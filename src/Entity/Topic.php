@@ -34,6 +34,16 @@ class Topic
     #[ORM\Column(type: 'boolean')]
     private $status;
 
+    #[ORM\Column(type: 'datetime')]
+    private $publishedDate;
+
+    #[ORM\Column(type: 'datetime')]
+    private $updatedAt;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'topics')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $user;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -128,6 +138,42 @@ class Topic
     public function setStatus(bool $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getPublishedDate(): ?\DateTimeInterface
+    {
+        return $this->publishedDate;
+    }
+
+    public function setPublishedDate(\DateTimeInterface $publishedDate): self
+    {
+        $this->publishedDate = $publishedDate;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
