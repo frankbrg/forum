@@ -23,6 +23,5 @@
         <button type="submit" class="btn">Modify</button>
     {{ form_end(userForm) }}
 
-     <a href="{{path('admin_toggle', {'id' : user.id})}}" class="btn">Ban</a>
      <a href="{{path('authentication_delete_account')}}" class="btn">Delete account</a>
 {% endblock %}

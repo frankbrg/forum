@@ -16,9 +16,13 @@
 						<a href="{{ path('admin_index') }}" role="button" class="secondary">Admin</a>
 					</li>
 				{% endif %}
+                <li>
+					<a href="{{ path('authentication_edit') }}" role="button">Me</a>
+				</li>
 				<li>
 					<a href="{{ path('authentication_logout') }}">Logout</a>
 				</li>
+                
 			{% else %}
 				<li>
 					<a href="{{ path('authentication_register') }}">Register</a>
