@@ -55,10 +55,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Topic::class, orphanRemoval: true)]
     private $topics;
 
+    #[ORM\Column(type: 'boolean')]
+    private $status;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->topics = new ArrayCollection();
+        $this->status = true;
     }
 
     public function getId(): ?int
@@ -270,6 +274,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $topic->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

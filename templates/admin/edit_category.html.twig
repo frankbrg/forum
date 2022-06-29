@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AdminController!{% endblock %}
+
+{% block body %}
+<div class="example-wrapper">
+    {{ form_start(categoryForm) }}
+        {{ form_row(categoryForm.name) }}
+        <button type="submit" class="btn">Submit</button>
+    {{ form_end(categoryForm) }}
+</div>
+{% endblock %}

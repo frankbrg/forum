@@ -39,6 +39,7 @@ class TopicController extends AbstractController
         dd($topics,$categories);
         return $this->render('topic/index.html.twig', [
             'topics' => $topics,
+            'categories' => $categories
         ]);
     }
 
