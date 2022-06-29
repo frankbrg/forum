@@ -28,7 +28,7 @@ class UserFixtures extends Fixture
         }
 
         $this->createUser($manager, [
-            'username' => 'frankbrg',
+            'username' => 'admin',
             'email' => 'frank.brg@icloud.com',
             'firstname' => 'Frank',
             'lastname' => 'Bergé',
@@ -36,8 +36,21 @@ class UserFixtures extends Fixture
             'postalCode' => '31300',
             'city' => 'Bordeaux',
             'phoneNumber' => '0607641568',
-            'password' => 'frankberge',
+            'password' => 'admin123456',
             'roles' => ['ROLE_ADMIN', 'ROLE_USER'],
+        ]);
+
+        $this->createUser($manager, [
+            'username' => 'usertest',
+            'email' => 'frank.brg@icloud.com',
+            'firstname' => 'Frank',
+            'lastname' => 'Bergé',
+            'address' => '21 rue de la pomme',
+            'postalCode' => '31300',
+            'city' => 'Bordeaux',
+            'phoneNumber' => '0607641568',
+            'password' => 'usertest123',
+            'roles' => ['ROLE_USER'],
         ]);
 
         $manager->flush();
