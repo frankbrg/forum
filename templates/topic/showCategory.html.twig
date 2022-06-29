@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TopicController!{% endblock %}
+
+{% block body %}
+<h2>Category : {{category.name}}</h2>
+	{% for topic in category.topics %}
+		<article>
+			<header>{{topic.title}}</header>
+			{{topic.content}}
+			<footer>
+				<p>
+					Author :
+					{{topic.user.username}}
+				</p>
+				<a href="{{path('topic_show', {'slug': topic.slug})}}" role="button">More Detail</a>
+			</footer>
+		</article>
+	{% endfor %}
+{% endblock %}

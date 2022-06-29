@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TopicController!{% endblock %}
+
+{% block body %}
+<div class="example-wrapper">
+    {{ form_start(topicForm) }}
+        {{ form_row(topicForm.title) }}
+        {{ form_row(topicForm.content) }}
+        {{ form_row(topicForm.category) }}
+        <button type="submit" class="btn">Submit</button>
+    {{ form_end(topicForm) }}
+</div>
+{% endblock %}

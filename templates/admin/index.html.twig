@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AdminController!{% endblock %}
+
+{% block body %}
+	<h2>Users</h2>
+	<div class="row row-cols-1 row-cols-md-2">
+		{% for user in users %}
+			<div class="p-1">
+				<article class="m-1">
+                    <header>{{user.firstname}} {{user.lastname}}</header>
+					{{user.username}}
+					<footer>
+						<a href="{{path('admin_edit_user', {'id': user.id})}}" role="button">Edit</a>
+						<a href="{{path('admin_toggle', {'id': user.id})}}" role="button" class="secondary">{% if user.status %}Ban {% else %}unban{% endif %}</a>
+					</footer>
+				</article>
+			</div>
+		{% endfor %}
+	</div>
+    <h2>Categories</h2>
+	<div class="row row-cols-1 row-cols-md-2">
+		{% for category in categories %}
+			<div class="p-1">
+				<article class="m-1">
+					{{category.name}}
+					<footer>
+						<a href="{{path('topic_show_category', {'slug': category.slug})}}" role="button">Explore</a>
+						<a href="{{path('admin_edit_category', {'id': category.id})}}" class="secondary" role="button">Edit</a>
+					</footer>
+				</article>
+			</div>
+		{% endfor %}
+	</div>
+{% endblock %}

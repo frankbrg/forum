@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TopicController!
+{% endblock %}
+
+{% block body %}
+	<h2>Categories</h2>
+	<div class="row row-cols-1 row-cols-md-2">
+		{% for category in categories %}
+			<div class="p-1">
+				<article class="m-1">
+					{{category.name}}
+					<footer>
+						<a href="{{path('topic_show_category', {'slug': category.slug})}}" role="button">Explore</a>
+						{% if is_granted('ROLE_ADMIN') %}
+							<a href="{{path('admin_edit_category', {'id': category.id})}}" class="secondary" role="button">Edit</a>
+						{% endif %}
+					</footer>
+				</article>
+			</div>
+		{% endfor %}
+	</div>
+	<h2>Topics</h2>
+	{% for topic in topics %}
+		<article>
+			<header>{{topic.title}}</header>
+			{{topic.content}}
+			<footer>
+				<p>
+					Author :
+					{{topic.user.username}}
+				</p>
+				<p>
+					Date :
+					{{topic.publishedDate|date}}
+				</p>
+				<a href="{{path('topic_show', {'slug': topic.slug})}}" role="button">More Detail</a>
+			</footer>
+		</article>
+	{% endfor %}
+{% endblock %}
