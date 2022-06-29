@@ -37,7 +37,7 @@ class UserFixtures extends Fixture
             'city' => 'Bordeaux',
             'phoneNumber' => '0607641568',
             'password' => 'frankberge',
-            'roles' => ['ROLE_ADMIN'],
+            'roles' => ['ROLE_ADMIN', 'ROLE_USER'],
         ]);
 
         $manager->flush();

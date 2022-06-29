@@ -1,12 +1,52 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TopicController!{% endblock %}
+{% block title %}Hello TopicController!
+{% endblock %}
 
 {% block body %}
-<div class="example-wrapper">
-    {{ form_start(commentForm) }}
-        {{ form_row(commentForm.content) }}
-        <button type="submit" class="btn">Submit</button>
-    {{ form_end(commentForm) }}
-</div>
+	<hgroup>
+		<h2>Topic :
+			{{topic.title}}</h2>
+		<h3>By
+			{{topic.user.username}}
+			-
+			{{topic.publishedDate|date}}</h3>
+	</hgroup>
+
+	{{topic.content}}
+
+	{% if isOwner or isGranted %}
+		<div class="my-2">
+			<a href="{{path('topic_toggle', {'slug': topic.slug})}}" class="secondary" role="button">
+				{% if topic.isStatus %}Close{% else %}reopen
+				{% endif %}
+			</a>
+		</div>
+	{% endif %}
+	{% if topic.isStatus %}
+		<h2>Add Comment</h2>
+		{{ form_start(commentForm) }}
+		{{ form_row(commentForm.content) }}
+		<button type="submit" class="btn">Submit</button>
+		{{ form_end(commentForm) }}
+	{% endif %}
+
+	{% if comments is not empty %}
+		<h2>
+			Comments
+		</h2>
+		{% for comment in comments %}
+			<article>
+				{{comment.content}}
+				<footer>
+					<p>
+						Author :
+						{{comment.user.username}}
+					</p>
+					<a href="{{path('topic_show', {'slug': topic.slug})}}" role="button">More Detail</a>
+				</footer>
+			</article>
+		{% endfor %}
+	{% endif %}
+
 {% endblock %}

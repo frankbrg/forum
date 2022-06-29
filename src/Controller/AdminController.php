@@ -29,7 +29,6 @@ class AdminController extends AbstractController
         $users = $userRepository->findAll();
         $categories = $categoryRepository->findAll();
 
-        dd($users, $categories);
         return $this->render('admin/index.html.twig', [
             'users' => $users,
             'categories' => $categories,
@@ -47,7 +46,7 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('admin_index');
     }
 
-    #[Route('/toggle/{id}', name: 'delete_comment')]
+    #[Route('/delete/{id}', name: 'delete_comment')]
     public function deleteComment(Comment $comment, EntityManagerInterface $entityManager): Response
     {
         $entityManager->remove($comment);
