@@ -12,6 +12,9 @@
 					{{category.name}}
 					<footer>
 						<a href="{{path('topic_show_category', {'slug': category.slug})}}" role="button">Explore</a>
+						{% if is_granted('ROLE_ADMIN') %}
+							<a href="{{path('admin_edit_category', {'id': category.id})}}" class="secondary" role="button">Edit</a>
+						{% endif %}
 					</footer>
 				</article>
 			</div>

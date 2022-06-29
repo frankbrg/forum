@@ -6,10 +6,9 @@ use App\Entity\Category;
 use App\Entity\Comment;
 use App\Entity\User;
 use App\Form\CategoryFormType;
-use App\Form\UserFormType;
+use App\Form\EditUserFormType;
 use App\Repository\CategoryRepository;
 use App\Repository\UserRepository;
-use App\Security\Authenticator;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,7 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 #[IsGranted('ROLE_ADMIN')]
 #[Route(path: '/admin', name: 'admin_')]
@@ -49,26 +47,21 @@ class AdminController extends AbstractController
     #[Route('/delete/{id}', name: 'delete_comment')]
     public function deleteComment(Comment $comment, EntityManagerInterface $entityManager): Response
     {
+        $topic = $comment->getTopic();
         $entityManager->remove($comment);
         $entityManager->flush();
 
-        return $this->redirectToRoute('topic_index');
+        return $this->redirectToRoute('topic_show',['slug' => $topic->getSlug()]);
     }
 
     #[Route('/edit/{id}', name: 'edit_user')]
-    public function editUser(User $user, Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function editUser(User $user, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(UserFormType::class, $user);
+        $form = $this->createForm(EditUserFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -76,7 +69,7 @@ class AdminController extends AbstractController
             return $this->redirectToRoute('admin_index');
         }
 
-        return $this->render('security/edit.html.twig', [
+        return $this->render('admin/edit_user.html.twig', [
             'userForm' => $form->createView(),
             'user' => $user,
         ]);

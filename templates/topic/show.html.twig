@@ -43,7 +43,9 @@
 						Author :
 						{{comment.user.username}}
 					</p>
-					<a href="{{path('topic_show', {'slug': topic.slug})}}" role="button">More Detail</a>
+					{% if is_granted('ROLE_ADMIN') %}
+						<a href="{{path('admin_delete_comment', {'id': comment.id})}}" class="secondary" role="button">Delete</a>
+					{% endif %}
 				</footer>
 			</article>
 		{% endfor %}
