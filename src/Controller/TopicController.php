@@ -3,16 +3,28 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Comment;
 use App\Entity\Topic;
+use App\Form\CommentFormType;
+use App\Form\TopicFormType;
 use App\Repository\CategoryRepository;
+use App\Repository\CommentRepository;
 use App\Repository\TopicRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route(path: '/topic', name: 'topic_')]
 class TopicController extends AbstractController
 {
+
+    public function __construct(
+        private SluggerInterface $slugger
+    ){}
+
     #[Route('', name: 'index')]
     public function index(TopicRepository $topicRepository, CategoryRepository $categoryRepository): Response
     {
@@ -30,13 +42,37 @@ class TopicController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}', name: 'show')]
-    public function topicShow(Topic $topic): Response
+    #[Route('/show/{slug}', name: 'show')]
+    public function topicShow(Topic $topic, Request $request, EntityManagerInterface $entityManager, CommentRepository $commentRepository): Response
     {
-        dd($topic);
-        
+        $comment = new Comment();
+        $form = $this->createForm(CommentFormType::class, $comment);
+        $form->handleRequest($request);
+        $isOwner = $topic->getUser() === $this->getUser();
+        $isGranted = $this->isGranted('ROLE_ADMIN');
+
+        $comments = $commentRepository->findBy([
+            'topic' => $topic
+        ],[
+            'createAt' => 'DESC'
+        ]);
+
+        if ($this->getUser() && $form->isSubmitted() && $form->isValid() && $topic->isStatus()) {
+            $comment->setCreatedAt(new \DateTimeImmutable());
+            $comment->setUser($this->getUser());
+            $comment->setTopic($topic);
+
+            $entityManager->persist($comment);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('topic_show',['slug' => $topic->getSlug()]);
+        }
         return $this->render('topic/show.html.twig', [
+            'commentForm' => $form->createView(),
             'topic' => $topic,
+            'comments' => $comments,
+            'isOwner' => $isOwner,
+            'isGranted' => $isGranted
         ]);
     }
 
@@ -48,5 +84,43 @@ class TopicController extends AbstractController
         return $this->render('topic/showCategory.html.twig', [
             'category' => $category,
         ]);
+    }
+
+    #[Route('/create', name: 'create')]
+    public function create(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $topic = new Topic();
+        $form = $this->createForm(TopicFormType::class, $topic);
+        $form->handleRequest($request);
+
+        if ($this->getUser() && $form->isSubmitted() && $form->isValid()) {
+            $topic->setSlug($this->slugger->slug($topic->getTitle())->lower());
+            $topic->setPublishedDate(new \DateTimeImmutable());
+            $topic->setUser($this->getUser());
+
+            $entityManager->persist($topic);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('topic_show',['slug' => $topic->getSlug()]);
+        }
+
+        return $this->render('topic/create.html.twig', [
+            'topicForm' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/close/{slug}', name: 'close')]
+    public function close(Topic $topic, EntityManagerInterface $entityManager): Response
+    {
+        $isOwner = $topic->getUser() === $this->getUser();
+        $isGranted = $this->isGranted('ROLE_ADMIN');
+
+        if ($isOwner || $isGranted) {
+            $topic->setStatus(false);
+            $entityManager->persist($topic);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('topic_show',['slug' => $topic->getSlug()]);
     }
 }

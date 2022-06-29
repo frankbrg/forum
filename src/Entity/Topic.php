@@ -44,6 +44,7 @@ class Topic
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->status = true;
     }
 
     public function getId(): ?int

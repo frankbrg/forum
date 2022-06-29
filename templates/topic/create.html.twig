@@ -4,9 +4,11 @@
 
 {% block body %}
 <div class="example-wrapper">
-    {{ form_start(commentForm) }}
-        {{ form_row(commentForm.content) }}
+    {{ form_start(topicForm) }}
+        {{ form_row(topicForm.title) }}
+        {{ form_row(topicForm.content) }}
+        {{ form_row(topicForm.category) }}
         <button type="submit" class="btn">Submit</button>
-    {{ form_end(commentForm) }}
+    {{ form_end(topicForm) }}
 </div>
 {% endblock %}
