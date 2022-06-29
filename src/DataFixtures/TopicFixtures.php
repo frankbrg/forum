@@ -37,7 +37,6 @@ class TopicFixtures extends Fixture implements DependentFixtureInterface
                 ->setSlug($this->slugger->slug($title)->lower())
                 ->setPublishedDate($this->faker->dateTime())
                 ->setContent($this->faker->realText())
-                ->setUpdatedAt(new \DateTime())
                 ->setStatus(true)
                 ->setUser($randomUser)
                 ->setCategory($randomCategory);

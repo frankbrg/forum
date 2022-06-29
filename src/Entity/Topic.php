@@ -37,9 +37,6 @@ class Topic
     #[ORM\Column(type: 'datetime')]
     private $publishedDate;
 
-    #[ORM\Column(type: 'datetime')]
-    private $updatedAt;
-
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'topics')]
     #[ORM\JoinColumn(nullable: false)]
     private $user;
@@ -150,18 +147,6 @@ class Topic
     public function setPublishedDate(\DateTimeInterface $publishedDate): self
     {
         $this->publishedDate = $publishedDate;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
 
         return $this;
     }
